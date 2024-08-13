@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">{{ post.title }}</h1>
+    <div class="text-center mb-4">
+        {% if post.thumbnail %}
+        <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}" class="img-fluid" style="max-height: 400px; object-fit: cover;">
+        {% endif %}
+    </div>
+    <div class="post-content">
+        <div class="mb-4">
+            {{ post.content|safe }}
+        </div>
+
+        <h3>Additional Images</h3>
+        <div class="row mb-4">
+            {% if post.image1 %}
+            <div class="col-md-3">
+                <img src="{{ post.image1.url }}" alt="Image 1" class="img-fluid" style="object-fit: cover;">
+            </div>
+            {% endif %}
+            {% if post.image2 %}
+            <div class="col-md-3">
+                <img src="{{ post.image2.url }}" alt="Image 2" class="img-fluid" style="object-fit: cover;">
+            </div>
+            {% endif %}
+            {% if post.image3 %}
+            <div class="col-md-3">
+                <img src="{{ post.image3.url }}" alt="Image 3" class="img-fluid" style="object-fit: cover;">
+            </div>
+            {% endif %}
+            {% if post.image4 %}
+            <div class="col-md-3">
+                <img src="{{ post.image4.url }}" alt="Image 4" class="img-fluid" style="object-fit: cover;">
+            </div>
+            {% endif %}
+        </div>
+
+        <p><strong>Likes:</strong> {{ post.total_likes }}</p>
+
+        {% if request.user.is_authenticated %}
+        <form action="{% url 'like_post' pk=post.pk %}" method="post" class="mb-4">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">
+                {% if is_liked %}
+                Unlike
+                {% else %}
+                Like
+                {% endif %}
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+    <h3>Comments</h3>
+    <div class="comments-section mb-4">
+        {% for comment in comments %}
+        <div class="alert alert-secondary">
+            <strong>{{ comment.author.username }}:</strong> {{ comment.text }}
+        </div>
+        {% empty %}
+        <div class="alert alert-info">No comments yet.</div>
+        {% endfor %}
+    </div>
+
+    <h3>Add a Comment</h3>
+    <form method="post" action="{% url 'add_comment_to_post' pk=post.pk %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ comment_form.as_p }}
+        </div>
+        <button type="submit" class="btn btn-success">Add Comment</button>
+    </form>
+
+    {% if request.user.is_authenticated and request.user == post.author %}
+    <div class="mt-4">
+        <a href="{% url 'post_edit' pk=post.pk %}" class="btn btn-warning">Edit Post</a>
+        <a href="{% url 'post_delete' pk=post.pk %}" class="btn btn-danger">Delete Post</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="profile-container mt-5">  <!-- Add margin-top class for spacing -->
+    <h2 class="text-center mb-4">User Profile</h2>
+    <div class="profile-details d-flex align-items-start"> <!-- Use flexbox for layout -->
+        <div class="image-container me-4"> <!-- Image container with margin -->
+            {% if user.profile_image %}
+            <img src="{{ user.profile_image.url }}" alt="Profile Image" class="profile-image"> <!-- Add margin to the right -->
+            {% else %}
+            <img src="{% static 'path/to/default/image.jpg' %}" alt="Default Profile Image" class="profile-image"> <!-- Optional: default image if no profile image -->
+            {% endif %}
+        </div>
+        <div class="text-details"> <!-- Wrap text details in a div -->
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+            <p><strong>Email Address:</strong> {{ user.email }}</p>
+            <p><strong>Phone Number:</strong> {{ user.phone_number }}</p>
+            <p><strong>Level:</strong> {{ user.level }}</p>
+            <p><strong>Total Points:</strong> {{ user.points }}</p>
+        </div>
+    </div>
+    <div class="edit-button-container mt-3 text-center"> <!-- Center the edit button -->
+        <a href="{% url 'decorative_profile' %}" class="btn btn-primary">Edit Profile</a>
+    </div>
+</div>
+
+<style>
+    .profile-image {
+        width: 250px;  /* Set desired width */
+        height: 250px; /* Set desired height */
+        object-fit: cover; /* Ensure the image fits within the dimensions */
+        border: 2px solid #ddd; /* Optional: add a border */
+    }
+    .text-details {
+        font-size: 1.1rem; /* Slightly larger font size for better readability */
+        line-height: 1.6; /* Increase line height for better spacing */
+        margin-left: 20px; /* Add space between image and text */
+    }
+    .profile-container {
+        max-width: 800px; /* Limit the max width for better layout */
+        margin: auto; /* Center the container */
+        padding: 20px; /* Add padding */
+        border: 1px solid #ccc; /* Optional: add a border around the profile container */
+        border-radius: 8px; /* Optional: round corners */
+        background-color: #f9f9f9; /* Optional: background color */
+    }
+</style>
+{% endblock %}
